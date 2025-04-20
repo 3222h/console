@@ -1,0 +1,79 @@
+(async function() {
+    // Ask user for special video URL
+    let specialVideoURL = prompt("Enter the special YouTube video URL:");
+    if (!specialVideoURL || !specialVideoURL.includes("v=")) {
+        console.error("Invalid YouTube URL. Script aborted.");
+        return;
+    }
+    let specialVideoID = new URL(specialVideoURL).searchParams.get("v");
+
+    let totalStartTime = Date.now();
+    let specialVideoTime = Math.floor(Math.random() * (300 - 240 + 1) + 240) * 1000; // 4 to 5 minutes
+    let autoNextInterval;
+    let specialTriggered = false;
+
+    function getCurrentVideoID() {
+        let urlParams = new URLSearchParams(window.location.search);
+        return urlParams.get("v");
+    }
+
+    function checkIfPlaying() {
+        let playButton = document.querySelector(".ytp-play-button");
+        return playButton && playButton.getAttribute("data-title-no-tooltip") === "Pause";
+    }
+
+    function playNext() {
+        // Simulate Shift + N key press to play next video
+        document.dispatchEvent(new KeyboardEvent('keydown', {
+            key: 'N',
+            code: 'KeyN',
+            keyCode: 78,
+            which: 78,
+            shiftKey: true
+        }));
+        console.log("Skipped to next video.");
+    }
+
+    function loop() {
+        if (specialTriggered) return;
+
+        let currentTime = Date.now();
+        if (currentTime - totalStartTime >= specialVideoTime) {
+            console.log("Redirecting to special video...");
+            specialTriggered = true;
+            clearTimeout(autoNextInterval);
+            window.location.href = `https://www.youtube.com/watch?v=${specialVideoID}`;
+            return;
+        }
+
+        if (getCurrentVideoID() === specialVideoID) {
+            console.log("Special video already playing. Exiting loop.");
+            clearTimeout(autoNextInterval);
+            return;
+        }
+
+        if (checkIfPlaying()) {
+            let waitTime = Math.floor(Math.random() * (120 - 60 + 1) + 60) * 1000;
+            console.log(`Video playing. Waiting ${waitTime / 1000} seconds before next...`);
+            autoNextInterval = setTimeout(() => {
+                playNext();
+                loop();
+            }, waitTime);
+        } else {
+            console.log("No video playing yet. Rechecking in 5 seconds...");
+            setTimeout(loop, 5000);
+        }
+    }
+
+    console.log("Waiting for video to start playing...");
+    // Wait for playback before starting loop
+    let waitForPlay = setInterval(() => {
+        if (checkIfPlaying()) {
+            console.log("Video detected. Starting auto-next loop...");
+            clearInterval(waitForPlay);
+            loop();
+        } else {
+            console.log("Still waiting for video to play...");
+        }
+    }, 3000);
+})();
