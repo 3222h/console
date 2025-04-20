@@ -1,0 +1,157 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <title>YouTube Link Converter</title>
+  <style>
+    body {
+      font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+      background-color: #e9ecef;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      height: 100vh;
+      margin: 0;
+    }
+
+    .container {
+      background-color: #fff;
+      padding: 40px;
+      border-radius: 12px;
+      box-shadow: 0 8px 20px rgba(0, 0, 0, 0.1);
+      text-align: center;
+      width: 90%;
+      max-width: 600px;
+    }
+
+    h2 {
+      margin-bottom: 20px;
+      color: #343a40;
+    }
+
+    input[type="text"] {
+      width: 80%;
+      padding: 12px;
+      font-size: 16px;
+      border: 1px solid #ccc;
+      border-radius: 8px;
+      outline: none;
+      transition: border-color 0.2s;
+    }
+
+    input[type="text"]:focus {
+      border-color: #007bff;
+    }
+
+    .button-group {
+      margin-top: 15px;
+    }
+
+    button {
+      padding: 10px 20px;
+      font-size: 15px;
+      margin: 8px 5px;
+      border: none;
+      border-radius: 8px;
+      cursor: pointer;
+      transition: background-color 0.3s ease, transform 0.2s;
+    }
+
+    #convertBtn {
+      background-color: #007bff;
+      color: white;
+    }
+
+    #clearBtn {
+      background-color: #6c757d;
+      color: white;
+    }
+
+    #copyBtn {
+      background-color: #28a745;
+      color: white;
+    }
+
+    button:hover {
+      transform: translateY(-2px);
+    }
+
+    #status {
+      margin-top: 20px;
+      font-weight: bold;
+      color: #333;
+    }
+
+    #copyCount {
+      margin-top: 10px;
+      color: #555;
+      font-size: 15px;
+    }
+  </style>
+</head>
+<body>
+
+  <div class="container">
+    <h2>YouTube Link Converter</h2>
+
+    <input type="text" id="inputLink" placeholder="Paste any YouTube URL here">
+    
+    <div class="button-group">
+      <button id="convertBtn">Convert</button>
+      <button id="clearBtn">Clear</button>
+      <button id="copyBtn">Copy</button>
+    </div>
+
+    <div id="status"></div>
+    <div id="copyCount">Copied 0 times</div>
+  </div>
+
+  <script>
+    const inputLink = document.getElementById("inputLink");
+    const statusDiv = document.getElementById("status");
+    const convertBtn = document.getElementById("convertBtn");
+    const clearBtn = document.getElementById("clearBtn");
+    const copyBtn = document.getElementById("copyBtn");
+    const copyCountDiv = document.getElementById("copyCount");
+
+    let convertedUrl = "";
+    let copyCount = 0;
+
+    convertBtn.addEventListener("click", function () {
+      const input = inputLink.value.trim();
+      const regex = /(?:youtube\.com\/(?:watch\?v=|embed\/|v\/|shorts\/|.*[?&]v=)|youtu\.be\/)([a-zA-Z0-9_-]{11})/;
+      const match = input.match(regex);
+
+      if (match && match[1]) {
+        convertedUrl = `https://www.youtube.com/watch?v=${match[1]}`;
+        statusDiv.innerHTML = "✅ Link converted successfully.";
+      } else {
+        convertedUrl = "";
+        statusDiv.innerHTML = "❌ Invalid YouTube URL.";
+      }
+    });
+
+    clearBtn.addEventListener("click", function () {
+      inputLink.value = "";
+      statusDiv.innerHTML = "";
+      convertedUrl = "";
+      copyCount = 0;
+      copyCountDiv.textContent = "Copied 0 times";
+    });
+
+    copyBtn.addEventListener("click", function () {
+      if (convertedUrl) {
+        navigator.clipboard.writeText(convertedUrl).then(() => {
+          copyCount++;
+          statusDiv.innerHTML = "📋 Link copied to clipboard.";
+          copyCountDiv.textContent = `Copied ${copyCount} time${copyCount === 1 ? "" : "s"}`;
+        }).catch(err => {
+          statusDiv.innerHTML = "❌ Failed to copy.";
+        });
+      } else {
+        statusDiv.innerHTML = "⚠️ Nothing to copy.";
+      }
+    });
+  </script>
+
+</body>
+</html>
