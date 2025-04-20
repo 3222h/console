@@ -8,7 +8,7 @@
     let specialVideoID = new URL(specialVideoURL).searchParams.get("v");
 
     let totalStartTime = Date.now();
-    let specialVideoTime = Math.floor(Math.random() * (300 - 240 + 1) + 240) * 1000; // 4 to 5 minutes
+    let specialVideoTime = Math.floor(Math.random() * (150 - 120 + 1) + 120) * 1000; // 2 to 2.5 minutes
     let autoNextInterval;
     let specialTriggered = false;
 
@@ -53,7 +53,7 @@
         }
 
         if (checkIfPlaying()) {
-            let waitTime = Math.floor(Math.random() * (120 - 60 + 1) + 60) * 1000;
+            let waitTime = Math.floor(Math.random() * (40 - 35 + 1) + 35) * 1000;
             console.log(`Video playing. Waiting ${waitTime / 1000} seconds before next...`);
             autoNextInterval = setTimeout(() => {
                 playNext();
