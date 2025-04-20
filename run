@@ -1,0 +1,23 @@
+#!/bin/bash
+stty intr ""
+stty quit ""
+stty susp undef
+
+
+docker logs nomashine
+clear
+curl ifconfig.me
+echo
+echo
+seq 1 7200 | while read i; do 
+    echo -en "\r Running .     $i s /7200 s"; sleep 0.1
+    echo -en "\r Running ..    $i s /7200 s"; sleep 0.1
+    echo -en "\r Running ...   $i s /7200 s"; sleep 0.1
+    echo -en "\r Running ....  $i s /7200 s"; sleep 0.1
+    echo -en "\r Running ..... $i s /7200 s"; sleep 0.1
+    echo -en "\r Running     . $i s /7200 s"; sleep 0.1
+    echo -en "\r Running  .... $i s /7200 s"; sleep 0.1
+    echo -en "\r Running   ... $i s /7200 s"; sleep 0.1
+    echo -en "\r Running    .. $i s /7200 s"; sleep 0.1
+    echo -en "\r Running     . $i s /7200 s"; sleep 0.1
+done
