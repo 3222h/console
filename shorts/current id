@@ -1,40 +1,47 @@
 (function() {
-  // Extract the current video ID
-  const currentVideoId = document.querySelector('div.reel-video-in-sequence-new.style-scope.ytd-shorts')?.id;
+  // Function to extract current video ID from the URL
+  function getCurrentVideoID() {
+    const pathParts = window.location.pathname.split('/');
+    // Assuming the URL is in the form of /shorts/<video-id>, we extract the video ID
+    return pathParts[2]; 
+  }
+
+  // Log the current URL for debugging
+  console.log('Current URL:', window.location.href);
+
+  // Get the current video ID
+  const currentVideoId = getCurrentVideoID();
   
   if (!currentVideoId) {
-    console.log('No current video ID found');
+    console.log('No current video ID found in URL');
     return;
   }
 
   // Log the current video ID for debugging
   console.log('Current Video ID:', currentVideoId);
 
-  // Extract the background image URL from the thumbnail
-  const thumbnailDiv = document.querySelector('div.reel-video-in-sequence-thumbnail.style-scope.ytd-shorts');
-  const backgroundImage = thumbnailDiv ? thumbnailDiv.style.backgroundImage : null;
-
-  if (!backgroundImage) {
-    console.log('No background image found');
-    return;
+  // Function to extract video ID from the background-image URL
+  function extractVideoIdFromImageUrl(url) {
+    const regex = /\/vi\/([a-zA-Z0-9_-]+)\//;
+    const match = url.match(regex);
+    return match ? match[1] : null;
   }
 
-  // Log the extracted background image for debugging
-  console.log('Background image URL:', backgroundImage);
+  // Find all <div> elements inside <ytd-shorts> that contain video background images
+  const videoDivs = document.querySelectorAll('ytd-shorts .reel-video-in-sequence-new');
 
-  // Try extracting the video ID directly from the background image URL
-  const videoIdMatch = backgroundImage.match(/https:\/\/i\.ytimg\.com\/vi\/([^\/]+)\//);
-
-  if (videoIdMatch) {
-    const extractedVideoId = videoIdMatch[1];  // Get the video ID from the URL
-    console.log('Extracted Video ID:', extractedVideoId);
-    
-    if (extractedVideoId === currentVideoId) {
-      console.log('The video IDs match: ' + currentVideoId);
-    } else {
-      console.log('Video IDs do not match');
+  // Loop through each <div> and check if its background image contains the current video ID
+  videoDivs.forEach((div) => {
+    const style = div.querySelector('.reel-video-in-sequence-thumbnail')?.style;
+    if (style && style.backgroundImage) {
+      const backgroundUrl = style.backgroundImage;
+      const videoId = extractVideoIdFromImageUrl(backgroundUrl);
+      
+      // Check if the extracted video ID matches the current video ID
+      if (videoId === currentVideoId) {
+        // Print the id of the matched <div>
+        console.log('Matching video ID found in div with ID:', div.id);
+      }
     }
-  } else {
-    console.log('No matching video ID found in the background image URL');
-  }
+  });
 })();
