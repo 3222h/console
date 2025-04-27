@@ -1,0 +1,17 @@
+// Select the main container ytd-shorts
+let shortsContainer = document.querySelector('ytd-shorts');
+
+// Check if the container exists
+if (shortsContainer) {
+  // Find the div inside the main container with the specified class and id="10"
+  let reelDiv = shortsContainer.querySelector('div.reel-video-in-sequence-new.style-scope.ytd-shorts#\\31 0');
+  
+  // Log the content or value of the div
+  if (reelDiv) {
+    console.log(reelDiv.innerHTML);  // Or use reelDiv.textContent if you want plain text
+  } else {
+    console.log('Div with specified class and id="10" not found inside the ytd-shorts container.');
+  }
+} else {
+  console.log('Main container <ytd-shorts> not found.');
+}
