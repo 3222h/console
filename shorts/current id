@@ -1,0 +1,40 @@
+(function() {
+  // Extract the current video ID
+  const currentVideoId = document.querySelector('div.reel-video-in-sequence-new.style-scope.ytd-shorts')?.id;
+  
+  if (!currentVideoId) {
+    console.log('No current video ID found');
+    return;
+  }
+
+  // Log the current video ID for debugging
+  console.log('Current Video ID:', currentVideoId);
+
+  // Extract the background image URL from the thumbnail
+  const thumbnailDiv = document.querySelector('div.reel-video-in-sequence-thumbnail.style-scope.ytd-shorts');
+  const backgroundImage = thumbnailDiv ? thumbnailDiv.style.backgroundImage : null;
+
+  if (!backgroundImage) {
+    console.log('No background image found');
+    return;
+  }
+
+  // Log the extracted background image for debugging
+  console.log('Background image URL:', backgroundImage);
+
+  // Try extracting the video ID directly from the background image URL
+  const videoIdMatch = backgroundImage.match(/https:\/\/i\.ytimg\.com\/vi\/([^\/]+)\//);
+
+  if (videoIdMatch) {
+    const extractedVideoId = videoIdMatch[1];  // Get the video ID from the URL
+    console.log('Extracted Video ID:', extractedVideoId);
+    
+    if (extractedVideoId === currentVideoId) {
+      console.log('The video IDs match: ' + currentVideoId);
+    } else {
+      console.log('Video IDs do not match');
+    }
+  } else {
+    console.log('No matching video ID found in the background image URL');
+  }
+})();
